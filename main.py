@@ -1,6 +1,8 @@
 import csv
 import random
+import tkinter as tk
 
+# count for global total cards
 totalcards = 0
 
 # class for flashcards (front and back side)
@@ -50,13 +52,21 @@ def play_flashcards(flashcards):
 
     print(f"Finish! Your score is {points} out of {totalcards}.")
 
-
-        
-
 ###############
-
+'''
 print("Let's play flashcards!")
 
 flashcards = load_flashcards('flashcards.csv')
 
 play_flashcards(flashcards)
+'''
+###############
+
+root = tk.Tk()
+root.title('Counting Seconds')
+w = tk.Label(root, text='Let\'s play flashcards!')
+button = tk.Button(root, text='Exit Program', width=25, command=root.destroy)
+
+w.pack()
+button.pack()
+root.mainloop()
