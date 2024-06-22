@@ -134,26 +134,26 @@ button.pack()
 
 # create question frame
 questiontext_frame = tk.Frame(root)
-questiontext_frame.place(relx=0.5, rely=0.25, anchor=tk.CENTER)
+questiontext_frame.place(relx=0.5, rely=0.3, anchor=tk.CENTER)
 questiontext_label = tk.Label(questiontext_frame, text="QUESTION", font=('Calibri', 10))
 questiontext_label.pack(side=tk.TOP)
 
 question_frame = tk.LabelFrame(root, width= 500, height= 50, bd=5)
-question_frame.place(relx=0.5, rely=0.35, anchor=tk.CENTER)
+question_frame.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
 question_frame.propagate(False)
 question_label = tk.Label(question_frame, text=keys[0], font=('Calibri', 15))
-question_label.place(relx=0.5, rely=0.55, anchor=tk.CENTER)
+question_label.place(relx=0.5, rely=0.6, anchor=tk.CENTER)
 
 answertext_frame = tk.Frame(root)
-answertext_frame.place(relx=0.5, rely=0.55, anchor=tk.CENTER)
+answertext_frame.place(relx=0.5, rely=0.6, anchor=tk.CENTER)
 answertext_label = tk.Label(answertext_frame, text="ANSWER", font=('Calibri', 10))
 answertext_label.pack(side=tk.TOP)
 
 answer_frame = tk.LabelFrame(root, width= 500, height= 50, bd=5)
-answer_frame.place(relx=0.5, rely=0.65, anchor=tk.CENTER)
+answer_frame.place(relx=0.5, rely=0.7, anchor=tk.CENTER)
 answer_frame.propagate(False)
 answer_label = tk.Label(answer_frame, text="", font=('Calibri', 15))
-answer_label.place(relx=0.5, rely=0.55, anchor=tk.CENTER)
+answer_label.place(relx=0.5, rely=0.6, anchor=tk.CENTER)
 
 # buttons to switch cards
 left_button = tk.Button(root, text="<--", command=left_pressed)
