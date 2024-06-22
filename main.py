@@ -125,7 +125,7 @@ root.minsize(600,400)
 header = tk.Label(root, text='Let\'s play flashcards!', font='Helvetica 18 bold')
 header.pack()
 
-subtitle = tk.Label(root, text='To play, please upload a CSV file with two rows for question and answers, with no header row. \nA sample file is provided in the folder.', font='Helvetica 10')
+subtitle = tk.Label(root, text='To play, please upload a CSV file with two columns for question and answers, with no header row. \nA sample file is provided in the folder.', font='Helvetica 10')
 subtitle.pack()
 
 # note: supposed to load csv file, for now it will exit program
