@@ -4,7 +4,13 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 
 # count for global total cards
+flashcards = {}
+global keys
+global current_cardindex
+keys = list(flashcards.keys())
+current_cardindex = 0
 totalcards = 0
+file_uploaded = False
 
 # load words in csv file into flashcard dictionary
 
@@ -49,22 +55,21 @@ play_flashcards(flashcards)
 
 # function for csv file upload
 def upload_file():
-
-    csv_filename = tk.filedialog.askopenfilename(
+    csv_filename = filedialog.askopenfilename(
         filetypes=[("CSV files", "*.csv"), ("All files", "*.*")]
     )
     
     if not csv_filename:
-        return  # exit if no selected file
+        return  # Exit if no file is selected
 
     global totalcards
-    flashcards = dict() #list of cards
+    global flashcards  # List of cards
 
-    # set default csv file if no input
-    if csv_filename is None:
-        csv_filename = 'flashcards.csv'
+    # Remove the old flashcards and reset totalcards
+    flashcards = dict()
+    totalcards = 0
 
-    # open csv file into the reader: csv_reader
+    # Open CSV file and load into the flashcards dictionary
     try:
         with open(csv_filename, newline='') as csvfile:
             csv_reader = csv.reader(csvfile)
@@ -73,23 +78,47 @@ def upload_file():
                     flashcards[row[0]] = row[1]
                     totalcards += 1
     except Exception as e:
-        tk.messagebox.showerror("Error", f"An error occurred: {e}")
+        messagebox.showerror("Error", f"An error occurred: {e}")
     
     global keys
+    global current_cardindex
+    global file_uploaded
     keys = list(flashcards.keys())
-
-    return flashcards
+    current_cardindex = 0
+    file_uploaded = True
+    
+    if totalcards > 0:
+        show_question()
 
 current_cardindex = 0
 
+def show_question():
+    global current_cardindex
+    question_label.config(text=keys[current_cardindex])
+    answer_label.config(text="")
+
+def show_answer():
+    global current_cardindex
+    if file_uploaded == True:
+        answer_label.config(text=flashcards[keys[current_cardindex]])
+
 def right_pressed():
-    if current_cardindex < totalcards:
-        question_label.config(keys[current_cardindex])
+    global current_cardindex
+    if file_uploaded == True:
+        if current_cardindex < totalcards - 1:
+            current_cardindex += 1
+        else:
+            current_cardindex = 0
+        show_question()
 
 def left_pressed():
-    if current_cardindex > 0:
-        current_cardindex -= 1
-        question_label.config(keys[current_cardindex])
+    global current_cardindex
+    if file_uploaded == True:
+        if current_cardindex > 0:
+            current_cardindex -= 1
+        else:
+            current_cardindex = totalcards - 1
+        show_question()
 
 ###############
 
@@ -111,7 +140,7 @@ button = tk.Button(root, text='Load CSV File', width=25, command=upload_file)
 button.pack()
 
 # create question frame
-question_frame = tk.Frame(root, highlightbackground="black", highlightthickness=2)
+question_frame = tk.Frame(root)
 question_frame.pack(side=tk.TOP)
 
 # create answer frame -> but don't pack yet
@@ -120,21 +149,19 @@ answer_frame = tk.Frame(root,highlightbackground="black", highlightthickness=2)
 # right there and show up only when press for answer
 
 # create flashcard displayer
-question_label = tk.Label(question_frame, text="PLACEHOLDER", font=('Calibri', 20))
+question_label = tk.Label(question_frame, text=" ", font=('Calibri', 20))
 question_label.pack(side=tk.TOP)
-answer_label = tk.Label(answer_frame, text=" ", font=('Calibri', 20), fg='green')
+answer_label = tk.Label(root, text="", font=('Calibri', 20), fg='white')
+answer_label.pack()
 
 # buttons to switch cards
-left_button = tk.Button(root, text="<--")
+left_button = tk.Button(root, text="<--", command=left_pressed)
 left_button.place(relx=0.2, rely=0.8, anchor=tk.CENTER)
 
-right_button = tk.Button(root, text="-->")
+right_button = tk.Button(root, text="-->", command=right_pressed)
 right_button.place(relx=0.8, rely=0.8, anchor=tk.CENTER)
 
-show_button = tk.Button(root, text="Show Answer")
-show_button.place(relx=0.5, rely=0.75, anchor=tk.CENTER)
-
-load_button = tk.Button(root, text="Load CSV")
-load_button.place(relx=0.5, rely=0.85, anchor=tk.CENTER)
+show_button = tk.Button(root, text="Show Answer", command=show_answer)
+show_button.place(relx=0.5, rely=0.8, anchor=tk.CENTER)
 
 root.mainloop()
