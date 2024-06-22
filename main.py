@@ -4,15 +4,21 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 
 # count for global total cards
-flashcards = {}
+flashcards = {"Powerhouse of the cell":"Mitochondria","Brain of the cell":"Nucleus",
+            "Protective layer of the cell":"Cell Membrane",
+            "Food Storage of the cell":"Vacuole","Jelly of the cell":"Cytoplasm", 
+            "Killer of the cell":"Lysosome"}
 global keys
 global current_cardindex
 keys = list(flashcards.keys())
 current_cardindex = 0
-totalcards = 0
-file_uploaded = False
+totalcards = 6
 
 # load words in csv file into flashcard dictionary
+
+###############
+
+# TODO: randomize card order
 
 '''
 # shuffle cards random
@@ -41,17 +47,6 @@ def play_flashcards(flashcards):
 
 
 ###############
-'''
-print("Let's play flashcards!")
-
-flashcards = load_flashcards('flashcards.csv')
-
-play_flashcards(flashcards)
-'''
-###############
-
-#this section is for all commands
-
 
 # function for csv file upload
 def upload_file():
@@ -82,10 +77,8 @@ def upload_file():
     
     global keys
     global current_cardindex
-    global file_uploaded
     keys = list(flashcards.keys())
     current_cardindex = 0
-    file_uploaded = True
     
     if totalcards > 0:
         show_question()
@@ -99,26 +92,23 @@ def show_question():
 
 def show_answer():
     global current_cardindex
-    if file_uploaded == True:
-        answer_label.config(text=flashcards[keys[current_cardindex]])
+    answer_label.config(text=flashcards[keys[current_cardindex]])
 
 def right_pressed():
     global current_cardindex
-    if file_uploaded == True:
-        if current_cardindex < totalcards - 1:
-            current_cardindex += 1
-        else:
-            current_cardindex = 0
-        show_question()
+    if current_cardindex < totalcards - 1:
+        current_cardindex += 1
+    else:
+        current_cardindex = 0
+    show_question()
 
 def left_pressed():
     global current_cardindex
-    if file_uploaded == True:
-        if current_cardindex > 0:
-            current_cardindex -= 1
-        else:
-            current_cardindex = totalcards - 1
-        show_question()
+    if current_cardindex > 0:
+        current_cardindex -= 1
+    else:
+        current_cardindex = totalcards - 1
+    show_question()
 
 ###############
 
@@ -126,42 +116,54 @@ root = tk.Tk()
 root.title('Flashcards Player')
 
 # set fixed size
-width = 400
-height = 300
+width = 600
+height = 400
 root.geometry(f"{width}x{height}")
 root.resizable(False, False)
+root.minsize(600,400)
 
 # header
-header = tk.Label(root, text='Let\'s play flashcards!')
+header = tk.Label(root, text='Let\'s play flashcards!', font='Helvetica 18 bold')
 header.pack()
+
+subtitle = tk.Label(root, text='To play, please upload a CSV file with two rows for question and answers, with no header row. \nA sample file is provided in the folder.', font='Helvetica 10')
+subtitle.pack()
 
 # note: supposed to load csv file, for now it will exit program
 button = tk.Button(root, text='Load CSV File', width=25, command=upload_file)
 button.pack()
 
 # create question frame
-question_frame = tk.Frame(root)
-question_frame.pack(side=tk.TOP)
+questiontext_frame = tk.Frame(root)
+questiontext_frame.place(relx=0.5, rely=0.25, anchor=tk.CENTER)
+questiontext_label = tk.Label(questiontext_frame, text="QUESTION", font=('Calibri', 10))
+questiontext_label.pack(side=tk.TOP)
 
-# create answer frame -> but don't pack yet
-answer_frame = tk.Frame(root,highlightbackground="black", highlightthickness=2) 
-# TODO: answer frame should stay under question, 
-# right there and show up only when press for answer
+question_frame = tk.LabelFrame(root, width= 500, height= 50, bd=5)
+question_frame.place(relx=0.5, rely=0.35, anchor=tk.CENTER)
+question_frame.propagate(False)
+question_label = tk.Label(question_frame, text=keys[0], font=('Calibri', 15))
+question_label.place(relx=0.5, rely=0.55, anchor=tk.CENTER)
 
-# create flashcard displayer
-question_label = tk.Label(question_frame, text=" ", font=('Calibri', 20))
-question_label.pack(side=tk.TOP)
-answer_label = tk.Label(root, text="", font=('Calibri', 20), fg='white')
-answer_label.pack()
+answertext_frame = tk.Frame(root)
+answertext_frame.place(relx=0.5, rely=0.55, anchor=tk.CENTER)
+answertext_label = tk.Label(answertext_frame, text="ANSWER", font=('Calibri', 10))
+answertext_label.pack(side=tk.TOP)
+
+answer_frame = tk.LabelFrame(root, width= 500, height= 50, bd=5)
+answer_frame.place(relx=0.5, rely=0.65, anchor=tk.CENTER)
+answer_frame.propagate(False)
+answer_label = tk.Label(answer_frame, text="", font=('Calibri', 15))
+answer_label.place(relx=0.5, rely=0.55, anchor=tk.CENTER)
 
 # buttons to switch cards
 left_button = tk.Button(root, text="<--", command=left_pressed)
-left_button.place(relx=0.2, rely=0.8, anchor=tk.CENTER)
+left_button.place(relx=0.2, rely=0.9, anchor=tk.CENTER)
 
 right_button = tk.Button(root, text="-->", command=right_pressed)
-right_button.place(relx=0.8, rely=0.8, anchor=tk.CENTER)
+right_button.place(relx=0.8, rely=0.9, anchor=tk.CENTER)
 
 show_button = tk.Button(root, text="Show Answer", command=show_answer)
-show_button.place(relx=0.5, rely=0.8, anchor=tk.CENTER)
+show_button.place(relx=0.5, rely=0.9, anchor=tk.CENTER)
 
 root.mainloop()
