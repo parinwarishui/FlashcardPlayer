@@ -17,8 +17,6 @@ totalcards = 6
 
 ###############
 
-# TODO: randomize card order
-
 '''
 # shuffle cards random
 def play_flashcards(flashcards):
